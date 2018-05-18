@@ -1,0 +1,174 @@
+/* This file will hold styles that are loaded using the same media query as the narrow grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the normal and widescreen layouts. You may override these styles in the normal 
+ *  and widescreen CSS files as appropriate. */
+
+ /*  The Menu */
+ .logo-img {
+    width: 27%;
+}
+
+
+#block-nivo-slider-nivo-slider {
+   margin-top: 15px; 
+}
+
+#zone-preface-wrapper {
+ padding: 100px 0px 5px;
+
+}
+#block-nice-menus-1, #block-nice-menus-2 {
+    float: right;
+    margin-top: -45px;
+}
+
+/*search*/
+
+#block-search-form {
+  margin-top: -104px;
+}
+
+input[type="text"] {
+    padding: 14px 5px;
+    font-size: 12px;
+    font-family: inherit;
+
+}
+
+button, input[type="reset"], input[type="submit"], input[type="button"] {
+    padding: 1px 3px 0px;
+}
+
+.ui-accordion .ui-accordion-header {
+    padding: 12.5px;
+}
+h2.block-title {
+    font-size: 29px;
+}
+
+
+/*Our Focus*/
+
+section#block-views-what-we-do-block .views-row {
+ float: left;
+    width: calc(33.3% - 60px);
+    margin-right: 20px;
+}
+
+section#block-views-what-we-do-block .views-field-title a {
+    font-size: 20px;
+}
+#block-views-what-we-do-block img{
+width:160px;
+height:110px;
+}
+
+a.button {
+    padding: 4px 0;
+    font-size: 13px;
+   
+}
+
+#block-block-2 h2.section-title,#block-block-2 p {
+ font-size: 48px;
+}
+
+
+
+/* News*/
+#block-views-news-block .views-field-field-news-image {
+    width: 45%;
+    float: left;
+    margin-right: 20px;
+}
+ 
+#block-views-news-block .views-field-body {
+    float: right;
+    width: 52%;
+}
+section#block-views-news-block span.date-display-single {
+    font-size: 11px;
+}
+
+#block-views-news-block .news-content {
+    font-size: 14px;
+
+
+#block-views-news-block .news-content a {
+    font-size: 14px;
+}
+/* The footer */
+/*.front #region-footer-second {
+    width: 100%;
+    margin-left: -107px;
+    margin-right: 0px;
+    padding: 25px 107px;
+}
+*/
+
+.region-footer-second-inner .block {
+    float: left;
+    width: 33%;
+    padding-top: 20px;
+}
+
+.block-block-6 .content {
+    padding-top: 30px;
+}
+
+/*The inside Pages*/
+
+.view-header {
+    font-size: 48px;
+}
+
+#widget_pager_bottom_what_we_do-page .views-field-title a {
+    font-size: 32px;
+    color: #fff;
+}
+/*The inside Pages board-members*/
+
+.view-board-members .views-row {
+    float: left;
+    width: 25%;
+    margin: 0 0 20px 0px;
+    /* background:  palegoldenrod; */
+}
+
+.view-board-members .views-field-field-profile-picture img {
+    width: 100%;
+    height:  auto;
+    /* max-height: 320px; */
+}
+
+.view-board-members .views-field-title {
+    margin: 0px 0px;
+    padding: 0px 0px;
+}
+
+
+ul.nice-menu li.menuparent ul, #header-region ul.nice-menu li.menuparent ul {
+    background:  yellow;
+    top: 69px;
+    text-align:  left;
+}
+
+#block-nice-menus-1 ul.nice-menu li.menuparent ul li a {
+    text-align:  left;
+    margin: auto;
+}
+#region-footer-second h2.block-title {
+    font-size: 18px;
+}
+
+
+.not-front .view-partners .view-content {
+    display:  flex;
+    flex-wrap:  wrap;
+}
+.not-front .view-partners .views-row {
+    flex: 0 0 33%;
+    text-align:  center;
+    padding-bottom: 10px;
+}
+

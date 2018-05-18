@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the gsap module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function gsap_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $t = get_t();
+    $library = libraries_detect('gsap');
+    $error_type = isset($library['error']) ? drupal_ucfirst($library['error']) : '';
+    $error_message = isset($library['error message']) ? $library['error message'] : '';
+
+    if (empty($library['installed'])) {
+      $requirements['gsap_library'] = array(
+        'title' => $t('GSAP library'),
+        'value' => $t('@e: At least @a', array(
+          '@e' => $error_type,
+          '@a' => GSAP_MIN_VERSION,
+        )),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('!error You need to download the !gsap, extract the archive and place the greensock-gs directory in the %path directory on your server.',
+          array(
+            '!error' => $error_message,
+            '!gsap' => l($t('GSAP library'), $library['download url']),
+            '%path' => 'sites/all/libraries',
+          )
+        ),
+      );
+    }
+    elseif (version_compare($library['version'], GSAP_MIN_VERSION, '>=')) {
+      $requirements['gsap_library'] = array(
+        'title' => $t('GSAP library'),
+        'value' => $library['version'],
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    else {
+      $requirements['gsap_library'] = array(
+        'title' => $t('GSAP library'),
+        'value' => $t('At least @a', array('@a' => GSAP_MIN_VERSION)),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('You need to download a later version of the !gsap and replace the old version located in the %path directory on your server.',
+          array(
+            '!gsap' => l($t('GSAP library'), $library['download url']),
+            '%path' => $library['library path'],
+          )
+        ),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function gsap_install() {
+  variable_set('gsap_uncompressed', 0);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function gsap_uninstall() {
+  variable_del('gsap_uncompressed');
+}

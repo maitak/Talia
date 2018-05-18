@@ -1,0 +1,248 @@
+<?php
+
+/**
+ * @file
+ * Greensock API integration module.
+ */
+
+/**
+ * The minimal version of the GSAP library.
+ *
+ * @const GSAP_MIN_VERSION
+ */
+define('GSAP_MIN_VERSION', '1.18.2');
+
+/**
+ * Relative path to minified GSAP library files.
+ *
+ * @const GSAP_PATH_MINIFIED
+ */
+define('GSAP_PATH_MINIFIED', 'src/minified/');
+
+/**
+ * Relative path to uncompressed GSAP library files.
+ *
+ * @const GSAP_PATH_UNCOMPRESSED
+ */
+define('GSAP_PATH_UNCOMPRESSED', 'src/uncompressed/');
+
+/**
+ * Group for GSAP core components.
+ *
+ * @const GSAP_COMPONENT_GROUP_CORE
+ */
+define('GSAP_COMPONENT_GROUP_CORE', 'core');
+
+/**
+ * Group for GSAP easing components.
+ *
+ * @const GSAP_COMPONENT_GROUP_EASING
+ */
+define('GSAP_COMPONENT_GROUP_EASING', 'easing');
+
+/**
+ * Group for GSAP plugin components.
+ *
+ * @const GSAP_COMPONENT_GROUP_PLUGIN
+ */
+define('GSAP_COMPONENT_GROUP_PLUGIN', 'plugin');
+
+/**
+ * Group for GSAP util components.
+ *
+ * @const GSAP_COMPONENT_GROUP_UTIL
+ */
+define('GSAP_COMPONENT_GROUP_UTIL', 'util');
+
+/**
+ * Implements hook_permission().
+ */
+function gsap_permission() {
+  $permission['administer gsap'] = array(
+    'title' => t('Administer GSAP settings'),
+    'description' => t('Configure settings for GSAP library'),
+  );
+
+  return $permission;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function gsap_menu() {
+  $items['admin/config/media/gsap'] = array(
+    'title' => 'GSAP',
+    'description' => "Manage GSAP settings.",
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gsap_admin_settings'),
+    'access arguments' => array('administer gsap'),
+    'file' => 'includes/gsap.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function gsap_hook_info() {
+  $hooks['gsap_components_info'] = array('group' => 'gsap');
+  $hooks['gsap_components_info_alter'] = array('group' => 'gsap');
+  $hooks['gsap_component_dirs_alter'] = array('group' => 'gsap');
+  $hooks['gsap_variants_info'] = array('group' => 'gsap');
+
+  return $hooks;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function gsap_libraries_info() {
+  $uncompressed = variable_get('gsap_uncompressed', 0);
+  $components = gsap_components();
+  $variants = gsap_variants();
+
+  $file_suffix = !$uncompressed ? '.min' : '';
+  $file_path = $uncompressed ? GSAP_PATH_UNCOMPRESSED : GSAP_PATH_MINIFIED;
+
+  $tween_lite_file = $file_path . gsap_component_dirs($components['tweenlite']['group'])
+    . $components['tweenlite']['filename'] . $file_suffix . '.js';
+
+  $defaults = array(
+    'name' => t('GSAP'),
+    'vendor url' => 'http://greensock.com/gsap',
+    'download url' => 'https://github.com/greensock/GreenSock-JS/archive/master.zip',
+    'version arguments' => array(
+      'file' => $tween_lite_file,
+      'pattern' => '@(?i:(?<=VERSION:[\s+])([\d\.]+))@',
+      'lines' => 2,
+    ),
+  );
+
+  $libraries['gsap'] = $defaults;
+  $libraries['gsap']['files']['js'][$tween_lite_file] = array('group' => JS_LIBRARY);
+
+  foreach ($variants as $name => $props) {
+    $vc = array_intersect_key($components, array_flip(array_values($props['components'])));
+
+    if (!empty($vc)) {
+      $libraries[$name] = $defaults;
+      $libraries[$name]['name'] = $props['label'];
+      $libraries[$name]['library path'] = libraries_get_path('gsap');
+
+      if (!array_key_exists('tweenmax', $vc) && !array_key_exists('tweenlite', $vc)) {
+        $libraries[$name]['dependencies'] = array('gsap');
+      }
+
+      foreach ($vc as $values) {
+        $file = $file_path . gsap_component_dirs($values['group']) . $values['filename'] . $file_suffix . '.js';
+        $libraries[$name]['files']['js'][$file] = array('group' => JS_LIBRARY);
+      }
+    }
+  }
+
+  return $libraries;
+}
+
+/**
+ * Returns an array of GSAP components registered via hook_gsap_components_info.
+ *
+ * @param bool $reset
+ *   Boolean flag for force call gsap_components_info hooks.
+ *
+ * @return array
+ *   Resulting array of GSAP components.
+ */
+function gsap_components($reset = FALSE) {
+  $components = &drupal_static(__FUNCTION__);
+
+  if (!isset($components) || $reset) {
+    $components = array();
+
+    // Gather information from hook_gsap_components_info() in enabled modules.
+    foreach (module_implements('gsap_components_info') as $module) {
+      // Filter components with empty filename.
+      $module_components = array_filter(module_invoke($module, 'gsap_components_info'), function ($c) {
+        return !empty($c['filename']);
+      });
+
+      foreach ($module_components as $name => $props) {
+        $props['module'] = $module;
+        $components[$name] = $props;
+      }
+    }
+
+    drupal_alter('gsap_components_info', $components);
+
+    // Add TweenLite directly, because it's base GSAP component and
+    // always should be available.
+    $components['tweenlite'] = array(
+      'filename' => 'TweenLite',
+      'group' => GSAP_COMPONENT_GROUP_CORE,
+      'module' => 'gsap',
+    );
+  }
+
+  return $components;
+}
+
+/**
+ * Returns an array of GSAP variants registered via hook_gsap_variants_info.
+ *
+ * Prefix 'gsap_' will be added to each library variant to avoid overriding
+ * existing libraries if variant doesn't start with 'gsap_'.
+ *
+ * @param bool $reset
+ *   Boolean flag for force call gsap_variants_info hooks.
+ *
+ * @return array
+ *   Resulting array of GSAP variants.
+ */
+function gsap_variants($reset = FALSE) {
+  $variants = &drupal_static(__FUNCTION__);
+
+  if (!isset($variants) || $reset) {
+    $variants = array();
+    $prefix = 'gsap_';
+
+    $lib_variants = module_invoke_all('gsap_variants_info');
+    foreach ($lib_variants as $name => $value) {
+      if (substr($name, 0, strlen($prefix)) == $prefix) {
+        $name = substr($name, strlen($prefix));
+      }
+      $name = $prefix . $name;
+      $variants[$name] = $value;
+    }
+  }
+
+  return $variants;
+}
+
+/**
+ * Return array with directory names for groups of GSAP components.
+ *
+ * @param bool $group
+ *   Group name. If specified - the dir for this group will be returned.
+ *
+ * @return array
+ *   Associative array where keys are group names and values - directory names
+ *   where each group is located.
+ */
+function gsap_component_dirs($group = FALSE) {
+  $map = &drupal_static(__FUNCTION__, array());
+
+  if (empty($map)) {
+    $map = array(
+      GSAP_COMPONENT_GROUP_CORE => '',
+      GSAP_COMPONENT_GROUP_EASING => 'easing/',
+      GSAP_COMPONENT_GROUP_UTIL => 'utils/',
+      GSAP_COMPONENT_GROUP_PLUGIN => 'plugins/',
+    );
+  }
+
+  if (!empty($group)) {
+    return isset($map[$group]) ? $map[$group] : '';
+  }
+
+  return $map;
+}

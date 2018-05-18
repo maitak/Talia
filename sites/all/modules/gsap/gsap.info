@@ -1,0 +1,15 @@
+name = GSAP
+description = This module integrate the <a href='http://greensock.com/gsap' target='_blank'>GSAP</a> javascript library with Drupal through the <a href='https://www.drupal.org/project/libraries' target='_blank'>Libraries API</a>.
+package = User interface
+;core = 7.x
+
+configure = admin/config/media/gsap
+
+dependencies[] = libraries (>=2.x)
+
+; Information added by Drupal.org packaging script on 2016-06-08
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "gsap"
+datestamp = "1465370940"
+

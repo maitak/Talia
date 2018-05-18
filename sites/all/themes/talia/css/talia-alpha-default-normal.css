@@ -1,0 +1,149 @@
+/* This file will hold styles that are loaded using the same media query as the normal grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the widescreen layout unless they are overridden by the widescreen styles. */
+
+
+#block-block-2 a.button {
+    width: 25%;
+    display: inline-block;
+}
+/*------Our Focus------*/
+#block-views-what-we-do-block img {
+    width: 100%;
+    height: auto;
+    
+}
+
+
+#block-views-what-we-do-block .views-field-title {margin: 7px 0px 7px 0px;padding: 3px 0px;height: auto;}
+
+a.button {
+padding: 12px 5px;
+font-size: 16px;
+}
+
+#block-views-what-we-do-block  a.button {margin-top: -9px;width: 97%;}
+.page-what-we-do .views-row {
+    width: 31.7%;
+    float: left;
+}
+
+/*------The News------*/
+
+section#block-views-news-block span.date-display-single {
+ font-size: 15px;
+}
+
+#block-views-news-block .views-field-title {
+    padding: 6px 0px;
+}
+/*The inside Pages*/
+
+.view-header {
+    font-size: 30px;
+}
+
+#widget_pager_bottom_what_we_do-page .views-field-title a {
+    font-size: 32px;
+    color: #fff;
+}
+/*The events*/
+.view-events .views-field-field-edate-1 {
+    width: 10%;
+}
+
+/*The news*/
+
+.page-news .view-news .views-row {
+    width: 47%;
+    float: left;
+  height: 358px;
+}
+.page-news .view-news .views-row-2, 
+.page-news .view-news .views-row-1{
+    margin-top: 12px ! important;
+}
+
+.page-news .view-news .views-row-even {
+    margin-left: 33px;
+}
+/*The one below the menu*/
+
+.not-logged-in #block-block-8 img ,
+.not-logged-in #block-block-10 img {
+    max-width: 100%!important;
+    min-width: 100%!important;
+    width: auto !important;
+    left: auto !important;
+    height: 550px !important;
+    margin: 0 auto !important;
+    margin-top: -100px !important;
+    display: block;
+    position: fixed !important;
+    top: 0px !important;
+    transition: 1s;
+}
+
+
+.not-logged-in #zone-content {
+    background: #fff;
+    margin-top: 18%;
+    position: relative;
+    transition: 1s;
+}
+
+.front #zone-content {
+    background: #fff;
+    margin-top: 0%;
+    position: relative;
+    transition: 1s;
+}
+#popup-active-overlay {
+    position: fixed;
+    z-index: 2000;
+    top: -4px;
+    left: 0;
+}
+.not-logged-in div#zone-branding-wrapper {
+    position: fixed;
+    top: 5px;
+    padding: 12px 0;
+    background: #fff;
+    z-index: 1999;
+    box-shadow: #eee 0px -3px 3px 4px;
+    width: 100%;
+}
+
+.not-logged-in #zone-menu-wrapper {
+    position: relative;
+    border-bottom: #fff 5px solid;
+    margin-top: 156px;
+    background: #fff;
+}
+
+.not-logged-in div#zone-header-wrapper {
+    margin-top: -20px;
+    border-top: #fff 7px solid;
+    z-index: 99;
+}
+
+#block-views-what-we-do-block .views-row {
+    float: left;
+    width: 31%;
+}
+.region-footer-second-inner .block {
+    display: inline-flex;
+    width: calc(25% - 40px);
+    min-height: 100px;
+    padding: 0 20px;
+}
+.not-front .view-partners .view-content {
+    display:  flex;
+    flex-wrap:  wrap;
+}
+.not-front .view-partners .views-row {
+    flex: 0 0 33%;
+    text-align:  center;
+    padding-bottom: 10px;
+}
+
